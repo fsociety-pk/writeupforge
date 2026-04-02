@@ -2,7 +2,18 @@ import os
 from groq import Groq
 from dotenv import load_dotenv
 
-load_dotenv()
+# Load environment variables with better error handling
+try:
+    load_dotenv()
+except PermissionError as e:
+    # Better error message for permission issues
+    raise PermissionError(
+        f"❌ Permission Error: Cannot read .env file\n"
+        f"Error: {str(e)}\n\n"
+        f"Fix this by running:\n"
+        f"  sudo chown $USER:$USER /home/username/writeupforge/.env\n"
+        f"  sudo chmod 600 /home/username/writeupforge/.env"
+    )
 
 
 class AIHandler:

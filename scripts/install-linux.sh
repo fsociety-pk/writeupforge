@@ -148,8 +148,20 @@ else
         echo "Then go to Settings and enter your API key"
     else
         echo "GROQ_API_KEY=$api_key" > "$PROJECT_DIR/.env"
-        chmod 600 "$PROJECT_DIR/.env"
-        echo -e "${GREEN}[+] API key saved to .env (secure permissions set)${NC}"
+        # Set permissions so the regular user can read it
+        # Using 644 allows the file to be readable by all users, writable by owner only (root)
+        chmod 644 "$PROJECT_DIR/.env"
+        
+        # Fix ownership so the actual user (not root) owns the file
+        # When using sudo, $SUDO_USER contains the original user's name
+        if [ ! -z "$SUDO_USER" ]; then
+            # Transfer ownership from root to the user who ran sudo
+            chown "$SUDO_USER:$SUDO_USER" "$PROJECT_DIR/.env"
+            chmod 600 "$PROJECT_DIR/.env"
+            echo -e "${GREEN}[+] API key saved to .env with secure permissions${NC}"
+        else
+            echo -e "${GREEN}[+] API key saved to .env (readable by current user)${NC}"
+        fi
     fi
 fi
 
