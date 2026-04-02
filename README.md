@@ -22,62 +22,76 @@ Before you install, you need a free Groq API key:
 
 ## Installation & Setup
 
+**Quick Summary of Steps:**
+[1] Clone the repository
+[2] Prepare your API key (have it ready)
+[3] Run the installer script
+
+---
+
 ### For Linux Users
 
-Step 1: Clone the repository
+**Step 1: Clone the repository**
 ```bash
 git clone https://github.com/thehusnain/writeupforge.git
 cd writeupforge
 ```
 
-Step 2: Run the installer (creates virtual environment + installs dependencies)
+**Step 2: Prepare your API key**
+Make sure you have copied your Groq API key from https://console.groq.com/keys
+
+**Step 3: Run the installer**
 ```bash
 chmod +x scripts/install-linux.sh
 ./scripts/install-linux.sh
 ```
 
-The installer automatically:
-[+] Creates Python virtual environment
-[+] Activates virtual environment
-[+] Installs all dependencies
-[+] Prompts for Groq API key and saves to .env
+The installer will:
+[+] Create Python virtual environment
+[+] Activate virtual environment
+[+] Install all dependencies
+[+] Ask you to paste your API key (paste it now!)
+[+] Save API key to .env file
 
-Step 3: Activate virtual environment and run
+**Step 4: Run the application**
 ```bash
 source venv/bin/activate
 python3 run.py --cli    # Command-line mode
 python3 run.py --gui    # Graphical mode
 ```
 
-**Note:** You must run `source venv/bin/activate` every time before using the app (only once per terminal session)
+**Note:** You must run `source venv/bin/activate` every time before using the app
 
 ---
 
 ### For Windows Users
 
-Step 1: Clone the repository
+**Step 1: Clone the repository**
 ```
 git clone https://github.com/thehusnain/writeupforge.git
 cd writeupforge
 ```
 
-Step 2: Run the installer
+**Step 2: Prepare your API key**
+Make sure you have copied your Groq API key from https://console.groq.com/keys
+
+**Step 3: Run the installer**
 [+] Right-click: scripts/install-wizard.ps1
 [+] Select: "Run with PowerShell"
 [+] Click "Yes" when prompted (needs admin)
 
-The installer automatically:
-[+] Creates virtual environment
-[+] Installs all dependencies
-[+] Creates .env file
-[+] Creates Desktop shortcut
+The installer will:
+[+] Create virtual environment
+[+] Install all dependencies
+[+] Create .env file
+[+] Create Desktop shortcut
 
-Step 3: Add your API key
+**Step 4: Add your API key**
 [+] Open the .env file in project folder
-[+] Add your Groq API key (get it at https://console.groq.com/keys)
+[+] Paste your Groq API key
 [+] Save the file
 
-Step 4: Run the application
+**Step 5: Run the application**
 [+] Click the Desktop shortcut, OR
 [+] Use Start Menu > WriteupForge
 
