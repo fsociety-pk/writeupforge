@@ -26,6 +26,7 @@ setup(
         "Source Code": "https://github.com/your-username/WriteSec",
     },
     packages=find_packages(exclude=["tests"]),
+    py_modules=["cli", "run"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.8",
@@ -49,8 +50,8 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "writeupforge=run:run",
-            "fgwrite=run:run",
+            "writeupforge=cli:main",
+            "fgwrite=cli:main",
         ],
     },
     include_package_data=True,

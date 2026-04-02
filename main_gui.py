@@ -156,21 +156,76 @@ class WriteupForgeGUI(ctk.CTk):
             wraplength=400
         ).grid(row=0, column=0, sticky="ew", pady=(20, 30), padx=20)
         
-        # API Key input
+        # API Key input label
         ctk.CTkLabel(settings_frame, text="🔑 Groq API Key", font=ctk.CTkFont(size=12, weight="bold")).grid(row=1, column=0, sticky="w", pady=(10, 5), padx=20)
-        self.groq_key_entry = ctk.CTkEntry(settings_frame, show="*", height=40)
+        
+        # Use a text entry for better paste support
+        self.groq_key_entry = ctk.CTkEntry(settings_frame, height=40, show="*")
         self.groq_key_entry.grid(row=2, column=0, sticky="ew", pady=5, padx=20)
         self.groq_key_entry.insert(0, os.getenv("GROQ_API_KEY", ""))
+        
+        # Bind Ctrl+V and Cmd+V for better paste support
+        self.groq_key_entry.bind("<Control-v>", self._on_paste_key)
+        self.groq_key_entry.bind("<Command-v>", self._on_paste_key)
 
-        ctk.CTkLabel(settings_frame, text="Your API key is stored locally and never shared", text_color="gray", font=ctk.CTkFont(size=9)).grid(row=3, column=0, sticky="w", pady=(5, 20), padx=20)
+        # Instructions
+        instructions = "Paste your API key above\n• The key will be masked for security\n• Click 'Show Key' to verify\n• Your API key is stored locally"
+        ctk.CTkLabel(
+            settings_frame, 
+            text=instructions, 
+            text_color="gray", 
+            font=ctk.CTkFont(size=9),
+            justify="left"
+        ).grid(row=3, column=0, sticky="w", pady=(5, 10), padx=20)
+
+        # Button frame
+        button_frame = ctk.CTkFrame(settings_frame, fg_color="transparent")
+        button_frame.grid(row=4, column=0, sticky="ew", pady=(10, 20), padx=20)
+        button_frame.grid_columnconfigure(0, weight=1)
+        button_frame.grid_columnconfigure(1, weight=1)
+
+        # Show/Hide button
+        self.show_key_btn = ctk.CTkButton(
+            button_frame, 
+            text="👁️ Show Key", 
+            command=self.toggle_show_key,
+            height=40,
+            fg_color="gray60"
+        )
+        self.show_key_btn.grid(row=0, column=0, sticky="ew", padx=(0, 10))
+        self.key_shown = False
 
         # Save button
-        save_btn = ctk.CTkButton(settings_frame, text="💾 Save API Key", command=self.save_settings, height=40)
-        save_btn.grid(row=4, column=0, sticky="ew", pady=20, padx=20)
+        save_btn = ctk.CTkButton(button_frame, text="💾 Save API Key", command=self.save_settings, height=40)
+        save_btn.grid(row=0, column=1, sticky="ew")
         
         # Test connection button
         test_btn = ctk.CTkButton(settings_frame, text="🔗 Test Connection", command=self.test_api_connection, height=40)
         test_btn.grid(row=5, column=0, sticky="ew", pady=10, padx=20)
+    
+    def _on_paste_key(self, event=None):
+        """Handle paste events for API key entry"""
+        try:
+            # Get clipboard content
+            clipboard = self.clipboard_get()
+            # Clear entry and insert pasted content
+            self.groq_key_entry.delete(0, "end")
+            self.groq_key_entry.insert(0, clipboard.strip())
+            return "break"  # Consume the event
+        except Exception as e:
+            messagebox.showerror("Paste Error", f"Could not paste: {str(e)}")
+            return "break"
+    
+    def toggle_show_key(self):
+        """Toggle between showing and hiding the API key"""
+        if self.key_shown:
+            self.groq_key_entry.configure(show="*")
+            self.show_key_btn.configure(text="👁️ Show Key")
+            self.key_shown = False
+        else:
+            self.groq_key_entry.configure(show="")
+            self.show_key_btn.configure(text="🔒 Hide Key")
+            self.key_shown = True
 
     def save_settings(self):
         groq_key = self.groq_key_entry.get().strip()
