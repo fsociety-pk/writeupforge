@@ -17,31 +17,26 @@ git clone https://github.com/thehusnain/writeupforge.git
 cd writeupforge
 ```
 
-Step 2: Create .env file with your API key
+Step 2: Run the installer (creates virtual environment + installs dependencies)
 ```bash
-nano .env
+chmod +x scripts/install-linux.sh
+./scripts/install-linux.sh
 ```
 
-Add this line:
-```
-GROQ_API_KEY=YOUR_API_KEY_HERE
-```
+The installer automatically:
+[+] Creates Python virtual environment
+[+] Activates virtual environment
+[+] Installs all dependencies
+[+] Prompts for Groq API key and saves to .env
 
-Get your free API key at: https://console.groq.com/keys
-
-Step 3: Install dependencies
+Step 3: Activate virtual environment and run
 ```bash
-pip install -r requirements.txt
+source venv/bin/activate
+python3 run.py --cli    # Command-line mode
+python3 run.py --gui    # Graphical mode
 ```
 
-Step 4: Run the application
-```bash
-# CLI mode (command-line)
-python3 run.py --cli
-
-# Or GUI mode (graphical)
-python3 run.py --gui
-```
+**Note:** You must run `source venv/bin/activate` every time before using the app (only once per terminal session)
 
 ---
 
@@ -79,6 +74,9 @@ Step 4: Run the application
 
 ### Running in CLI Mode
 ```bash
+# If not already activated
+source venv/bin/activate
+
 python3 run.py --cli
 ```
 [+] Enter writeup title
@@ -89,6 +87,9 @@ python3 run.py --cli
 
 ### Running in GUI Mode
 ```bash
+# If not already activated
+source venv/bin/activate
+
 python3 run.py --gui
 ```
 [+] Fill in the form with your details

@@ -27,9 +27,22 @@ fi
 PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}')
 echo -e "${GREEN}[+] Python $PYTHON_VERSION found${NC}"
 
-# Install dependencies in current directory
+# Create virtual environment
+echo ""
+echo -e "${BOLD}[+] Creating virtual environment...${NC}"
+python3 -m venv venv
+echo -e "${GREEN}[+] Virtual environment created${NC}"
+
+# Activate virtual environment
+echo -e "${BOLD}[+] Activating virtual environment...${NC}"
+source venv/bin/activate
+echo -e "${GREEN}[+] Virtual environment activated${NC}"
+
+# Install dependencies in virtual environment
+echo ""
 echo -e "${BOLD}[+] Installing dependencies...${NC}"
-pip3 install -r requirements.txt
+pip install --upgrade pip
+pip install -r requirements.txt
 echo -e "${GREEN}[+] Dependencies installed${NC}"
 
 # Create .env file
@@ -65,9 +78,15 @@ echo ""
 echo -e "${BOLD}${GREEN}Installation Complete!${NC}"
 echo ""
 echo -e "${BOLD}Next steps:${NC}"
+echo ""
+echo "[+] Activate the virtual environment:"
+echo "    source venv/bin/activate"
+echo ""
 echo "[+] Run the application:"
 echo "    python3 run.py --cli   (command-line)"
 echo "    python3 run.py --gui   (graphical)"
 echo ""
 echo "[+] Generated reports saved in: output/"
+echo ""
+echo -e "${YELLOW}[!] You must run 'source venv/bin/activate' BEFORE running the app!${NC}"
 echo ""
