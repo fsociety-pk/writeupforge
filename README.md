@@ -43,24 +43,25 @@ Make sure you have copied your Groq API key from https://console.groq.com/keys
 **Step 3: Run the installer**
 ```bash
 chmod +x scripts/install-linux.sh
-./scripts/install-linux.sh
+sudo bash scripts/install-linux.sh
 ```
 
 The installer will:
 [+] Create Python virtual environment
-[+] Activate virtual environment
-[+] Install all dependencies
-[+] Ask you to paste your API key (paste it now!)
+[+] Install all dependencies  
+[+] Ask for your Groq API key (paste it now!)
+[+] Create system-wide `fgwrite` command
 [+] Save API key to .env file
 
-**Step 4: Run the application**
+**Step 4: Start using it immediately!**
 ```bash
-source venv/bin/activate
-python3 run.py --cli    # Command-line mode
-python3 run.py --gui    # Graphical mode
+# Just type the command directly - no setup needed!
+fgwrite --cli    # Command-line mode
+fgwrite --gui    # Graphical mode
+fgwrite          # Auto-detect mode
 ```
 
-**Note:** You must run `source venv/bin/activate` every time before using the app
+**That's it!** Just close and reopen your terminal, then you can use `fgwrite` from anywhere.
 
 ---
 
@@ -101,10 +102,7 @@ The installer will:
 
 ### Running in CLI Mode
 ```bash
-# If not already activated
-source venv/bin/activate
-
-python3 run.py --cli
+fgwrite --cli
 ```
 [+] Enter writeup title
 [+] Enter your name  
@@ -114,16 +112,13 @@ python3 run.py --cli
 
 ### Running in GUI Mode
 ```bash
-# If not already activated
-source venv/bin/activate
-
-python3 run.py --gui
+fgwrite --gui
 ```
 [+] Fill in the form with your details
 [+] Paste your lab notes
 [+] Click "Generate Professional Report"
 
-Reports are saved in: output/ folder
+Reports are saved in the project folder: `output/` directory
 
 ---
 
@@ -150,28 +145,55 @@ writeupforge/
 
 ## Troubleshooting
 
+### Error: "fgwrite: command not found"
+
+Close and reopen your terminal. The installation adds the command to system PATH which requires a terminal restart.
+
+If still not found:
+```bash
+# Verify it was installed
+ls -l /usr/local/bin/fgwrite
+
+# If missing, reinstall:
+sudo bash scripts/install-linux.sh
+```
+
 ### Error: "GROQ_API_KEY not found"
 
-Linux:
+Add your API key through the GUI:
+```bash
+fgwrite --gui
+```
+Then go to Settings → API Configuration and paste your key.
+
+Or edit .env manually:
 ```bash
 nano .env
 # Add: GROQ_API_KEY=your_key_here
 ```
 
-Windows:
-[+] Open .env file in project folder
-[+] Add your API key
-[+] Save and restart
-
 ### Error: "Python not found"
 
 Install Python 3.8+:
-- Linux: sudo apt install python3 python3-pip
-- Windows: Download from python.org (check "Add to PATH")
-
-### Error: "Module not found"
 ```bash
+# Ubuntu/Debian
+sudo apt install python3 python3-pip python3-venv
+
+# Fedora/RHEL
+sudo dnf install python3 python3-pip
+
+# Arch
+sudo pacman -S python python-pip
+```
+
+### Error: "Module not found" (groq, click, etc.)
+
+Reinstall the package:
+```bash
+cd <installation-directory>
+source venv/bin/activate
 pip install -r requirements.txt
+pip install -e .
 ```
 
 ---

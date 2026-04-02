@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# WriteupForge Linux Installer - Global Setup
+# WriteupForge Linux Installer - System-Wide Installation
 
 set -e
 
@@ -15,12 +15,22 @@ echo ""
 echo -e "${BOLD}${GREEN}WriteupForge - Linux Installation${NC}"
 echo ""
 
+# Check if running as root (needed for system-wide install)
+if [ "$EUID" -ne 0 ]; then 
+    echo -e "${YELLOW}[!] This installer needs sudo permissions to install system-wide${NC}"
+    echo "Please run with sudo:"
+    echo "    sudo bash scripts/install-linux.sh"
+    echo ""
+    exit 1
+fi
+
 # Check if Python 3 is installed
 if ! command -v python3 &> /dev/null; then
     echo -e "${RED}[ERROR] Python 3 is not installed!${NC}"
     echo "Install it with:"
-    echo "  Ubuntu/Debian: sudo apt install python3 python3-pip"
+    echo "  Ubuntu/Debian: sudo apt install python3 python3-pip python3-venv"
     echo "  Fedora/RHEL: sudo dnf install python3 python3-pip"
+    echo "  Arch: sudo pacman -S python python-pip"
     exit 1
 fi
 
@@ -52,80 +62,112 @@ pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
 echo -e "${GREEN}[+] Dependencies installed (including groq)${NC}"
 
-# Install the package in development mode - this creates the fgwrite command
+# Install the package in the venv
 echo ""
-echo -e "${BOLD}[+] Installing WriteupForge as a system tool...${NC}"
+echo -e "${BOLD}[+] Installing WriteupForge...${NC}"
 pip install -e .
-echo -e "${GREEN}[+] Installed! You can now use 'fgwrite' command${NC}"
+echo -e "${GREEN}[+] WriteupForge installed in virtual environment${NC}"
+
+# Create system-wide wrapper script
+echo ""
+echo -e "${BOLD}[+] Creating system-wide command wrapper...${NC}"
+cat > /usr/local/bin/fgwrite << 'WRAPPER_EOF'
+#!/bin/bash
+# WriteupForge - System-wide wrapper
+# Automatically activates venv and runs fgwrite
+
+# Try to get installation directory from stored path
+if [ -f "/etc/writeupforge-path" ]; then
+    INSTALL_DIR=$(cat /etc/writeupforge-path)
+else
+    # Fallback: try to detect from script location
+    INSTALL_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/../../" && pwd)"
+    if [ ! -d "$INSTALL_DIR/scripts" ]; then
+        INSTALL_DIR=""
+    fi
+fi
+
+# If still not found, search common locations
+if [ -z "$INSTALL_DIR" ] || [ ! -f "$INSTALL_DIR/venv/bin/activate" ]; then
+    for path in /root/writeupforge ~/writeupforge /opt/writeupforge /home/*/writeupforge /home/*/Desktop/writesec /home/*/Desktop/WriteSec; do
+        if [ -f "$path/venv/bin/activate" ]; then
+            INSTALL_DIR="$path"
+            break
+        fi
+    done
+fi
+
+if [ ! -f "$INSTALL_DIR/venv/bin/activate" ]; then
+    echo "Error: WriteupForge installation not found"
+    echo "Location checked: $INSTALL_DIR"
+    echo "Please reinstall WriteupForge using:"
+    echo "    sudo bash scripts/install-linux.sh"
+    exit 1
+fi
+
+# Activate venv and run fgwrite
+source "$INSTALL_DIR/venv/bin/activate"
+cd "$INSTALL_DIR"
+python3 -m cli "$@"
+WRAPPER_EOF
+
+chmod +x /usr/local/bin/fgwrite
+echo -e "${GREEN}[+] Created /usr/local/bin/fgwrite${NC}"
+
+# Store installation path for future reference
+echo "$PROJECT_DIR" > /etc/writeupforge-path
+echo -e "${GREEN}[+] Installation path registered${NC}"
+
+# Deactivate venv
+deactivate
 
 # Create .env file
 echo ""
 echo -e "${BOLD}[+] Setting up API configuration${NC}"
 
-if [ -f ".env" ]; then
+if [ -f "$PROJECT_DIR/.env" ]; then
     echo -e "${YELLOW}[!] .env file already exists${NC}"
     read -p "Do you want to replace it? (y/n): " replace_env
     if [ "$replace_env" != "y" ]; then
         echo "Keeping existing .env file"
-        deactivate
-        echo ""
-        echo -e "${BOLD}${GREEN}Installation Complete!${NC}"
-        echo ""
-        echo -e "${BOLD}To use WriteupForge:${NC}"
-        echo ""
-        echo "[+] Activate virtual environment (one-time per session):"
-        echo "    source $PROJECT_DIR/venv/bin/activate"
-        echo ""
-        echo "[+] Run command:"
-        echo "    fgwrite                   (auto-detect mode)"
-        echo "    fgwrite --cli             (command-line mode)"
-        echo "    fgwrite --gui             (graphical mode)"
-        echo ""
-        echo "[+] Generated reports saved in: $PROJECT_DIR/output/"
-        echo ""
-        exit 0
+    else
+        rm "$PROJECT_DIR/.env"
+    fi
+else
+    # Prompt for API key
+    echo ""
+    echo -e "${BOLD}Get your free Groq API Key:${NC}"
+    echo "Visit: https://console.groq.com/keys"
+    echo ""
+    read -sp "Paste your API Key here: " api_key
+    echo ""
+
+    if [ -z "$api_key" ]; then
+        echo -e "${YELLOW}[!] No API key provided${NC}"
+        echo "You can add it later by running: fgwrite --gui"
+        echo "Then go to Settings and enter your API key"
+    else
+        echo "GROQ_API_KEY=$api_key" > "$PROJECT_DIR/.env"
+        chmod 600 "$PROJECT_DIR/.env"
+        echo -e "${GREEN}[+] API key saved to .env (secure permissions set)${NC}"
     fi
 fi
 
-# Prompt for API key
 echo ""
-echo -e "${BOLD}Get your free Groq API Key:${NC}"
-echo "Visit: https://console.groq.com/keys"
+echo -e "${BOLD}${GREEN}✅ Installation Complete!${NC}"
 echo ""
-read -sp "Paste your API Key here: " api_key
+echo -e "${BOLD}You can now use WriteupForge from anywhere:${NC}"
 echo ""
-
-if [ -z "$api_key" ]; then
-    echo -e "${YELLOW}[!] No API key provided${NC}"
-    echo "You can add it later by running: fgwrite --gui"
-    echo "Then go to Settings and enter your API key"
-else
-    echo "GROQ_API_KEY=$api_key" > .env
-    chmod 600 .env
-    echo -e "${GREEN}[+] API key saved to .env (secure permissions set)${NC}"
-fi
-
-# Deactivate venv at the end
-deactivate
-
+echo "  fgwrite                   (auto-detect mode)"
+echo "  fgwrite --cli             (command-line mode)"
+echo "  fgwrite --gui             (graphical mode)"
 echo ""
-echo -e "${BOLD}${GREEN}Installation Complete!${NC}"
+echo -e "${GREEN}No need to activate virtual environment - just type 'fgwrite'!${NC}"
 echo ""
-echo -e "${BOLD}To use WriteupForge:${NC}"
-echo ""
-echo "[+] First time: Activate virtual environment"
-echo "    source $PROJECT_DIR/venv/bin/activate"
-echo ""
-echo "[+] Then run command (in any directory):"
-echo "    fgwrite                   (auto-detect mode - GUI on Windows, CLI on Linux)"
-echo "    fgwrite --cli             (command-line mode)"
-echo "    fgwrite --gui             (graphical mode)"
-echo ""
-echo "[+] For future sessions:"
-echo "    source $PROJECT_DIR/venv/bin/activate"
-echo "    fgwrite"
-echo ""
+echo "[+] Installation directory: $PROJECT_DIR"
 echo "[+] Generated reports saved in: $PROJECT_DIR/output/"
+echo ""
+echo -e "${YELLOW}[!] After installation, close and reopen your terminal for changes to take effect${NC}"
 echo ""
 echo -e "${GREEN}Happy writing! 🎉${NC}"
 echo ""
