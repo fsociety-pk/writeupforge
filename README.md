@@ -27,96 +27,159 @@ Convert raw cybersecurity lab notes into professional, structured Markdown and P
 
 ---
 
-## 🚀 Quick Start (All Platforms)
+## 🚀 Quick Start - Choose Your Method
 
-### Option 1: Universal Python Installer (Recommended)
+### ⭐ Easiest for Windows - Setup Wizard
 
-Works on Windows, Linux, and macOS:
+**One-click installation with automatic shortcuts!**
+
+1. **Download the repository**
+   - Get ZIP from GitHub and extract, OR
+   - `git clone https://github.com/thehusnain/writeupforge.git`
+
+2. **Run Setup Wizard**
+   - Right-click `install-wizard.ps1`
+   - Select **"Run with PowerShell"**
+   - Click "Yes" when prompted (needs admin)
+   - Follow wizard instructions
+
+3. **Automatic Setup**
+   - ✅ Creates virtual environment
+   - ✅ Installs all dependencies
+   - ✅ Creates **Desktop icon** 🖱️
+   - ✅ Creates **Start Menu shortcut** 📋
+   - ✅ Sets up `.env` file
+
+4. **Add Your API Key**
+   - Open `.env` file in WriteupForge folder
+   - Add your Groq API key
+
+5. **Launch!**
+   - Click **Desktop icon** OR
+   - Find in **Start Menu > WriteupForge**
+
+---
+
+### ⭐ Easiest for Linux / macOS - Global pip Installation
+
+**Available everywhere with one command!**
+
+#### Option A: pip (Recommended - Simplest)
 
 ```bash
-# Clone the repository
-git clone https://github.com/your-username/WriteSec.git
-cd WriteSec
+# Install directly from GitHub
+pip3 install git+https://github.com/thehusnain/writeupforge.git
 
-# Run the universal installer
-python install.py
+# Add your API key
+echo "GROQ_API_KEY=your_key_here" > ~/.writeupforge/.env
 
-# Follow the on-screen instructions
+# Run from anywhere
+writeupforge        # CLI mode
+python3 run.py --gui  # GUI mode
 ```
 
-### Option 2: Platform-Specific Setup
+#### Option B: pipx (Isolated Environment)
 
-#### Windows
 ```bash
-# Download the repository first, then in Command Prompt or PowerShell:
-setup_env.bat
+# Install pipx if needed
+pip3 install --user pipx
+
+# Install WriteupForge isolated
+pipx install git+https://github.com/thehusnain/writeupforge.git
+
+# Run from anywhere
+writeupforge
 ```
 
-#### Linux / macOS
+#### Option C: Interactive Setup Wizard
+
 ```bash
-# Make the script executable
-chmod +x setup_env.sh
+# Clone and run installer
+git clone https://github.com/thehusnain/writeupforge.git
+cd writeupforge
 
-# Run the setup
-./setup_env.sh
+chmod +x install-linux.sh
+./install-linux.sh
+
+# Choose: 1 (pip), 2 (pipx), or 3 (local venv)
 ```
+
+---
+
+## 📱 Desktop Launchers
+
+### Windows After Setup Wizard 
+- ✅ Desktop shortcut for instant launch
+- ✅ Start Menu folder (WriteupForge)
+- ✅ Uninstall option in Start Menu
+
+### Linux After pip/pipx Installation
+- ✅ Application launcher in your menu
+- ✅ Search "WriteupForge" in applications
+- ✅ Run command: `writeupforge` or `fgwrite`
 
 ---
 
 ## ⚙️ Configuration (All Platforms)
 
-### Step 1: Get Your Groq API Key
+### Step 1: Get Your Free Groq API Key
 
 1. Visit [https://console.groq.com/keys](https://console.groq.com/keys)
-2. Sign up for a free account (if needed)
+2. Sign up for free account (takes 2 minutes)
 3. Click **"Create API Key"**
 4. Copy the generated key
 
-### Step 2: Create .env File
+### Step 2: Add API Key to .env
 
-After installation, create a `.env` file in the project directory:
-
-**Windows (Notepad or Text Editor)**:
-1. Right-click in the folder → New → Text File
-2. Name it `.env` (make sure it starts with a dot)
-3. Open and add:
+**If you used Windows Setup Wizard:**
+- The `.env` file was created automatically
+- Just open it and add your key:
 ```env
 GROQ_API_KEY=your_copied_key_here
 ```
 
-**Linux / macOS (Terminal)**:
+**If you used pip/pipx:**
 ```bash
-echo "GROQ_API_KEY=your_copied_key_here" > .env
+# Create config folder
+mkdir -p ~/.writeupforge
+
+# Add your key
+echo "GROQ_API_KEY=your_copied_key_here" > ~/.writeupforge/.env
 ```
 
 ---
 
 ## 🏃 Running the Application
 
-### Windows
+### Windows - After Setup Wizard
 ```bash
-# GUI (Graphical interface)
-launch.bat
+# Method 1: Click the Desktop icon
+# Double-click "WriteupForge" on your Desktop
 
-# Or from PowerShell/Command Prompt
+# Method 2: Use Start Menu
+# Start Menu > WriteupForge > WriteupForge
+
+# Method 3: Command line (from project folder)
 python run.py
 python run.py --gui
 python run.py --cli
 ```
 
-### Linux / macOS
+### Linux / macOS - After pip/pipx Installation
 ```bash
-# Activate virtual environment first
-source venv/bin/activate
+# Method 1: Command shortcuts (from anywhere)
+writeupforge          # CLI mode
+fgwrite              # Alias for CLI
 
-# GUI mode
-python run.py --gui
+# Method 2: GUI mode (from anywhere)
+python3 run.py --gui
 
-# CLI mode (interactive command-line)
-python run.py --cli
+# Method 3: Use application launcher
+# Search for "WriteupForge" in your applications menu
 
-# Auto-detect (GUI on Windows, CLI on Linux/macOS)
-python run.py
+# Method 4: From project folder
+python3 run.py
+python3 run.py --cli
 ```
 
 ---
@@ -168,22 +231,14 @@ output/
 
 ## 🔧 Advanced Usage
 
-### Installation with pip (Global)
-
-```bash
-pip install git+https://github.com/your-username/WriteSec.git
-
-# Then run from anywhere
-writeupforge        # CLI mode
-fgwrite            # Alias for CLI
-```
+> **Note:** Most users should use the Windows Setup Wizard or Linux pip/pipx methods above. This section is for developers or advanced users.
 
 ### Development Setup
 
 ```bash
 # Clone repository
-git clone https://github.com/your-username/WriteSec.git
-cd WriteSec
+git clone https://github.com/thehusnain/writeupforge.git
+cd writeupforge
 
 # Create virtual environment
 python -m venv venv
@@ -197,8 +252,19 @@ source venv/bin/activate
 # Install dependencies
 pip install -r requirements.txt
 
+# Create .env file with your API key
+echo "GROQ_API_KEY=your_key_here" > .env
+
 # Run
-python run.py
+python run.py        # Auto-detect (GUI on Windows, CLI on Linux)
+python run.py --gui  # Force GUI mode
+python run.py --cli  # Force CLI mode
+```
+
+### Manual pip Installation (Developers)
+
+```bash
+pip install git+https://github.com/thehusnain/writeupforge.git
 ```
 
 ---

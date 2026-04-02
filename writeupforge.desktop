@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=WriteupForge
+Comment=Professional Cybersecurity Report Generator
+Icon=document-properties
+Exec=python3 run.py --gui
+Path=/home/thehusnain/Desktop/WriteSec
+Terminal=false
+Categories=Utility;Education;Development;
+X-AppStream-Ignore=true
