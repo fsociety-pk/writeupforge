@@ -3,10 +3,13 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.colors import HexColor
 from reportlab.lib.enums import TA_CENTER
+import os
 
 
 class PDFGenerator:
     def __init__(self, filename):
+        # Ensure directory exists for cross-platform compatibility
+        os.makedirs(os.path.dirname(filename) or '.', exist_ok=True)
         self.filename = filename
         self.styles = getSampleStyleSheet()
         self._create_custom_styles()

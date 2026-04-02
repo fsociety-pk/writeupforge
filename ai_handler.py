@@ -1,5 +1,5 @@
 import os
-from openai import OpenAI
+from groq import Groq
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -8,6 +8,10 @@ load_dotenv()
 class AIHandler:
     def __init__(self):
         self.api_key = os.getenv("GROQ_API_KEY")
+        if not self.api_key or self.api_key == "your_groq_api_key_here":
+            raise ValueError("GROQ_API_KEY not found in .env file. Please set your API key.")
+        
+        self.client = Groq(api_key=self.api_key)
         self.system_prompt = """You are an expert Cybersecurity Technical Writer. Convert raw lab notes into professional, structured writeups for platforms like Hackviser/HTB/TryHackMe.
 
 CONSTRAINTS:
@@ -44,22 +48,16 @@ Difficulty: {difficulty}
 RAW NOTES:
 {raw_notes}"""
 
-        if self.api_key and self.api_key != "your_groq_api_key_here":
-            try:
-                client = OpenAI(
-                    api_key=self.api_key,
-                    base_url="https://api.groq.com/openai/v1"
-                )
-                response = client.chat.completions.create(
-                    model="llama-3.1-8b-instant",
-                    messages=[
-                        {"role": "system", "content": self.system_prompt},
-                        {"role": "user", "content": user_prompt},
-                    ],
-                    temperature=0.2,
-                )
-                return response.choices[0].message.content
-            except Exception as e:
-                raise Exception(f"Groq API Error: {str(e)}")
-
-        raise ValueError("GROQ_API_KEY not found in .env file.")
+        try:
+            response = self.client.chat.completions.create(
+                model="mixtral-8x7b-32768",
+                messages=[
+                    {"role": "system", "content": self.system_prompt},
+                    {"role": "user", "content": user_prompt},
+                ],
+                temperature=0.2,
+                max_tokens=2048,
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            raise Exception(f"Groq API Error: {str(e)}")

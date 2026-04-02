@@ -39,13 +39,13 @@ setup(
     ],
     python_requires=">=3.8",
     install_requires=[
-        "openai",
-        "click",
-        "reportlab",
-        "python-dotenv",
-        "customtkinter",
-        "pillow",
-        "requests",
+        "groq>=0.4.0",
+        "click>=8.0",
+        "reportlab>=4.0",
+        "python-dotenv>=1.0",
+        "customtkinter>=5.0",
+        "pillow>=10.0",
+        "requests>=2.28",
     ],
     entry_points={
         "console_scripts": [

@@ -25,13 +25,13 @@ classifiers = [
     "Development Status :: 4 - Beta",
 ]
 dependencies = [
-    "openai",
-    "click",
-    "reportlab",
-    "python-dotenv",
-    "customtkinter",
-    "pillow",
-    "requests",
+    "groq>=0.4.0",
+    "click>=8.0",
+    "reportlab>=4.0",
+    "python-dotenv>=1.0",
+    "customtkinter>=5.0",
+    "pillow>=10.0",
+    "requests>=2.28",
 ]
 
 [project.urls]

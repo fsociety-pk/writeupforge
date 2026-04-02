@@ -1,32 +1,38 @@
 import platform
 import sys
+import click
 
 
 def run():
-    """Multi-platform entry point. Detects OS and launches GUI (Windows) or CLI (Linux)."""
+    """Multi-platform entry point. Detects OS and launches GUI or CLI."""
     os_name = platform.system()
     force_gui = '--gui' in sys.argv
     force_cli = '--cli' in sys.argv
 
     if force_gui:
+        # Force GUI mode
         from main_gui import run_gui
         run_gui()
     elif force_cli:
+        # Force CLI mode
         from main import run_cli
-        sys.argv = [arg for arg in sys.argv if arg != '--cli']
         run_cli()
     elif os_name == "Windows":
+        # Default to GUI on Windows
         from main_gui import run_gui
         run_gui()
-    elif os_name == "Linux":
-        from main import run_cli
-        sys.argv = [sys.argv[0]]
-        run_cli()
     else:
+        # Default to CLI on Linux/macOS
         from main import run_cli
-        sys.argv = [sys.argv[0]]
         run_cli()
 
 
 if __name__ == "__main__":
-    run()
+    try:
+        run()
+    except KeyboardInterrupt:
+        click.echo(click.style("\n\nApplication closed by user.", fg='yellow'))
+        sys.exit(0)
+    except Exception as e:
+        click.echo(click.style(f"\n❌ Error: {str(e)}", fg='red'))
+        sys.exit(1)
