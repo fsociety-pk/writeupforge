@@ -80,7 +80,7 @@ If you ever want to remove it:
 Run `sudo bash scripts/uninstall.sh` inside the project folder.
 
 **Windows:** 
-Delete the project folder and the icon from your Desktop.
+Run `scripts\uninstall.bat` from the project folder. This will safely remove the virtual environment, cache files, and the shortcuts it created.
 
 ---
 
