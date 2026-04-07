@@ -1,8 +1,15 @@
 # WriteupForge
 
-**WriteupForge** is a tool that takes your rough lab notes and automatically turns them into clear, professional cybersecurity writeups using AI. 
+**WriteupForge** is a tool that converts your raw notes into professional, structured cybersecurity writeups using AI. Whether you're writing learning notes, CTF solutions, lab writeups, or research documentation, WriteupForge automatically detects the type and structures your content accordingly.
 
-It works on Windows, Linux, and macOS, and generates reports in both **Markdown** and **PDF** formats.
+It works on Windows, Linux, and macOS, and generates outputs in **Markdown**, **PDF**, and includes **GitHub-ready README files**.
+
+### ✨ v1.1.0 Features
+- 🤖 **Automatic Type Detection** - AI detects writeup type (CTF, Lab, Learning, Research, Exploitation, Tool Guide)
+- 📋 **Adaptive Structuring** - Content organized based on detected type
+- 📊 **Auto Table Generation** - Creates tables where appropriate
+- 📑 **GitHub-Ready Output** - Professional README and organized folder structure
+- 📁 **One-Click Push to GitHub** - All files organized and ready to commit
 
 ---
 
@@ -54,21 +61,72 @@ WriteupForge uses Groq's super-fast AI to write the reports. It is completely fr
 
 ---
 
+## 🎯 What's New in v1.1.0?
+
+### Automatic Writeup Type Detection
+WriteupForge now intelligently detects what type of writeup you're creating:
+- **CTF Challenges** - Challenge writeups from Capture The Flag competitions
+- **Lab/Machine Writeups** - Writeups from platforms like HackTheBox, TryHackMe
+- **Learning Notes** - Raw notes from learning videos, courses, or tutorials
+- **Research** - Technical research and vulnerability analysis
+- **Exploitation** - Exploitation techniques and proof of concepts
+- **Tool Guides** - Tool usage guides and documentation
+
+### GitHub-Ready Output
+Every writeup now generates a complete, ready-to-push project:
+```
+output/
+└── Your_Project_Name/
+    ├── README.md       ✅ GitHub documentation
+    ├── writeup.md      ✅ Structured document
+    └── writeup.pdf     ✅ PDF format
+```
+
+### Automatic Structure Adaptation
+Based on the detected type, the AI creates the perfect structure with appropriate sections like:
+- Reconnaissance, Enumeration, Exploitation (for labs)
+- Challenge Description, Solution (for CTFs)
+- Core Concepts, Examples, Takeaways (for learning notes)
+- And more tailored to your content!
+
+### Better Formatting
+- 📊 Automatic table generation for data comparisons
+- 🔧 Proper code block formatting with language tags
+- 📸 Smart screenshot and diagram placeholders
+- 📝 Professional markdown throughout
+
+---
+
 ## 📝 How to Use
 
 ### Linux (Terminal Mode)
 Just type **`fgwrite`** in any terminal folder. It will ask you a few simple questions:
-- **Title** (e.g., "Nmap Scan")
+- **Title** (e.g., "Network Protocols Basics" or "HTB Nmap Writeup")
 - **Author** (Your name)
-- **Platform** (HackTheBox, TryHackMe, etc.)
+- **Platform** (HackTheBox, TryHackMe, Personal Learning, etc.)
 - **Difficulty** (Beginner, Intermediate, etc.)
 - **Your Notes** (Paste your rough notes and type `DONE` on an empty line)
 
-The tool will think for a few seconds, and then save the finished `.md` and `.pdf` files inside an `output/` folder wherever you are.
+The tool will:
+1. 🤖 Analyze your notes and detect the writeup type
+2. 📋 Structure the content appropriately
+3. 🎨 Format everything professionally
+4. 📁 Create a folder with `README.md`, `writeup.md`, and `writeup.pdf`
+5. ✅ Display the organized output ready to push!
 
 ### Windows (Graphic Interface)
 Open the app from your Desktop icon. 
-You will see a clean, simple window where you can type your Title, Name, select options, and paste your notes. Click the **Generate Professional Report** button and watch the magic happen!
+You will see a clean, simple window where you can type your Title, Name, select options, and paste your notes. Click the **Generate Professional Report** button and your complete project will be created!
+
+### After Generation
+Your project is ready to go to GitHub:
+```bash
+cd output/Your_Project_Name
+git init
+git add .
+git commit -m "Initial commit: Project writeup"
+git push origin main
+```
 
 ---
 
