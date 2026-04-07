@@ -2,6 +2,30 @@
 
 All notable changes to WriteupForge will be documented in this file.
 
+## [1.2.1] - April 7, 2026
+
+### 🐛 Bug Fixes
+
+#### Fixed Writeup Structure Preservation
+- **Issue**: AI was creating its own headings instead of preserving raw notes structure
+- **Fix**: Updated system prompt to strictly keep the exact headings from raw notes
+- **Fix**: Removed predefined section templates that forced unwanted reorganization
+- **Result**: Tool now formats content AS-IS without adding new sections
+
+#### Improved Content Accuracy
+- **Fixed**: All raw note content is now preserved - no information is skipped or removed
+- **Fixed**: Only typos and spelling errors are corrected
+- **Fixed**: No fake data or tables are generated unless already in raw notes
+- **Improvement**: Tool respects user's original structure and organization
+
+### 🔧 Technical Changes
+- Removed section template forcing in `StructuredPromptBuilder`
+- Enhanced prompt builder to preserve original note structure
+- Updated system instructions for stricter content preservation
+- Improved AI instructions to format-only (not reorganize)
+
+---
+
 ## [1.2.0] - April 7, 2026
 
 ### ✨ New Features
