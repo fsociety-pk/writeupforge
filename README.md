@@ -130,6 +130,36 @@ git push origin main
 
 ---
 
+## ⚙️ Available Commands
+
+### Check Version
+```bash
+fgwrite --version
+# or
+fgwrite -v
+```
+Shows the installed WriteupForge version.
+
+### Force CLI Mode (Linux/macOS)
+```bash
+fgwrite --cli
+```
+Launch in terminal mode even on systems that default to GUI.
+
+### Force GUI Mode
+```bash
+fgwrite --gui
+```
+Launch the graphical interface.
+
+### Generate Writeup (Default)
+```bash
+fgwrite
+```
+Start the interactive writeup generation process.
+
+---
+
 ## 🗑️ How to Uninstall
 
 If you ever want to remove it:
